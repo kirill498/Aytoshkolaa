@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АвтоСтарт - автошкола</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <!-- ШАПКА САЙТА -->
+    <header class="header">
+        <div class="header-wrapper">
+            <a href="index.html" class="logo">
+                <img src="png/logo.png" alt="логотип автошколы">
+            </a>
+
+            <ul class="menu" id="menu">
+                <li><a href="index.html" class="active">Главная</a></li>
+                <li><a href="pages/about.html">О школе</a></li>
+                <li><a href="pages/cars.html">Машины</a></li>
+                <li><a href="pages/instructors.html">Инструкторы</a></li>
+                <li><a href="pages/contacts.html">Контакты</a></li>
+                <li><a href="pages/reagistration.html">Записаться</a></li>
+            </ul>
+
+            <button class="burger-btn" onclick="toggleMenu()">☰</button>
+        </div>
+    </header>
+
+    <!-- ГЛАВНЫЙ БЛОК -->
+    <section class="hero">
+        <h1>Учим водить машину без стресса</h1>
+        <p>
+            Автошкола АвтоСтарт помогает и новичкам, и тем, кто уже пробовал ездить.
+            Занятия по теории и практике, честная цена без доплат.
+        </p>
+        <a href="pages/reagistration.html" class="btn">Записаться на курс</a>
+
+        <div class="facts">
+            <div class="fact-item">
+                <span class="number">11 лет</span>
+                <span>работаем в городе</span>
+            </div>
+            <div class="fact-item">
+                <span class="number">96%</span>
+                <span>сдают экзамен с 1 раза</span>
+            </div>
+            <div class="fact-item">
+                <span class="number">14</span>
+                <span>учебных машин</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- КОРОТКО ПРО ШКОЛУ -->
+    <section class="cards">
+        <h2>Почему выбирают нас</h2>
+        <div class="card-list">
+            <div class="card">
+                <h3>Фиксированная цена</h3>
+                <p>Стоимость курса не меняется после того, как вы записались.</p>
+            </div>
+            <div class="card">
+                <h3>Удобное расписание</h3>
+                <p>Занятия подстраиваются под вашу учёбу или работу.</p>
+            </div>
+            <div class="card">
+                <h3>Опытные инструкторы</h3>
+                <p>Инструктора учат спокойно объяснять и не торопят учеников.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ТАРИФЫ -->
+    <section class="prices">
+        <h2>Тарифы</h2>
+
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="showTab('categoryB')">Категория B</button>
+            <button class="tab-btn" onclick="showTab('season')">Сезонные предложения</button>
+        </div>
+
+        <div id="categoryB" class="tab-content active">
+            <div class="card-list">
+                <div class="card">
+                    <h3>Механика</h3>
+                    <p>32 000 рублей</p>
+                    <p>56 часов теории + 56 часов практики</p>
+                </div>
+                <div class="card">
+                    <h3>Автомат</h3>
+                    <p>36 000 рублей</p>
+                    <p>Практика на машине с АКПП</p>
+                </div>
+                <div class="card">
+                    <h3>Ускоренный курс</h3>
+                    <p>41 000 рублей</p>
+                    <p>Занятия 3 раза в неделю</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="season" class="tab-content">
+            <div class="card-list">
+                <div class="card">
+                    <h3>Осенний старт</h3>
+                    <p>29 000 рублей</p>
+                    <p>Первое занятие бесплатно</p>
+                </div>
+                <div class="card">
+                    <h3>Уже пробовал водить</h3>
+                    <p>19 500 рублей</p>
+                    <p>Сокращённая программа практики</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ФУТЕР -->
+    <footer class="footer footer-home">
+        <div class="footer-wrapper">
+            <div class="footer-col">
+                <h4>АвтоСтарт</h4>
+                <p>Автошкола категории B</p>
+            </div>
+            <div class="footer-col">
+                <h4>Контакты</h4>
+                <a href="tel:+74957000000">+7 (495) 700-00-00</a>
+                <a href="mailto:info@autostart.example">info@autostart.example</a>
+            </div>
+            <div class="footer-col">
+                <h4>Страницы</h4>
+                <a href="pages/about.html">О школе</a>
+                <a href="pages/contacts.html">Контакты</a>
+                <a href="pages/admin.html">Админ-панель</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- НИЖНЯЯ ПЛАШКА -->
+    <div class="promo-line">
+        <span>Успейте записаться на обучение по цене от 15 000 рублей</span>
+        <a href="pages/reagistration.html" class="btn">Записаться сейчас</a>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

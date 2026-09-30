@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Инструкторы - АвтоСтарт</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+    <!-- ШАПКА САЙТА -->
+    <header class="header">
+        <div class="header-wrapper">
+            <a href="../index.html" class="logo">
+                <img src="../png/logo.png" alt="логотип автошколы">
+                <span class="logo-name">АвтоСтарт</span>
+            </a>
+
+            <ul class="menu" id="menu">
+                <li><a href="../index.html">Главная</a></li>
+                <li><a href="about.html">О школе</a></li>
+                <li><a href="cars.html">Машины</a></li>
+                <li><a href="instructors.html" class="active">Инструкторы</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+                <li><a href="reagistration.html">Записаться</a></li>
+            </ul>
+
+            <button class="burger-btn" onclick="toggleMenu()">☰</button>
+        </div>
+    </header>
+
+    <!-- СПИСОК ИНСТРУКТОРОВ -->
+    <section class="cards">
+        <h2>Наши инструкторы</h2>
+        <div class="card-list">
+
+            <div class="card">
+                <img src="https://auto-stet.ru/upload/resize_cache/iblock/6c3/180_180_0/2xueewr3tvzzwz2qlmnc6kw0wydcwxvm.jpg" alt="инструктор Сергей">
+                <h3>Сергей Петров</h3>
+                <p>Стаж вождения 15 лет, учит спокойно и без спешки.</p>
+                <button class="btn btn-dark" onclick="toggleInfo('info1')">Подробнее</button>
+                <p id="info1" style="display:none;">
+                    Работает в школе с 2016 года, специализируется на учениках,
+                    которые раньше никогда не сидели за рулём.
+                </p>
+            </div>
+
+            <div class="card">
+                <img src="https://auto-stet.ru/upload/resize_cache/iblock/1ff/180_180_0/55tcuh7xpbptonf2tr64dapap020dtwh.jpg" alt="инструктор Анна">
+                <h3>Анна Кузнецова</h3>
+                <p>Учит на автомате, хорошо объясняет правила парковки.</p>
+                <button class="btn btn-dark" onclick="toggleInfo('info2')">Подробнее</button>
+                <p id="info2" style="display:none;">
+                    В прошлом работала автоинструктором в другом городе,
+                    ученики отмечают её терпение.
+                </p>
+            </div>
+
+            <div class="card">
+                <img src="https://auto-stet.ru/upload/resize_cache/iblock/fb1/180_180_0/yu54wtmxcsvaon9uyclweg8h57mlsl17.png" alt="инструктор Игорь">
+                <h3>Игорь Смирнов</h3>
+                <p>Готовит к вождению в городе и на трассе.</p>
+                <button class="btn btn-dark" onclick="toggleInfo('info3')">Подробнее</button>
+                <p id="info3" style="display:none;">
+                    Помогает ученикам, которые боятся ездить по городу
+                    с плотным потоком машин.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ФУТЕР -->
+    <footer class="footer">
+        <div class="footer-wrapper">
+            <div class="footer-col">
+                <h4>АвтоСтарт</h4>
+                <p>Автошкола категории B</p>
+            </div>
+            <div class="footer-col">
+                <h4>Контакты</h4>
+                <a href="tel:+74957000000">+7 (495) 700-00-00</a>
+                <a href="mailto:info@autostart.example">info@autostart.example</a>
+            </div>
+            <div class="footer-col">
+                <h4>Страницы</h4>
+                <a href="about.html">О школе</a>
+                <a href="contacts.html">Контакты</a>
+                <a href="admin.html">Админ-панель</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/instructors.js"></script>
+</body>
+</html>

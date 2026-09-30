@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Машины - АвтоСтарт</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+    <!-- ШАПКА САЙТА -->
+    <header class="header">
+        <div class="header-wrapper">
+            <a href="../index.html" class="logo">
+                <img src="../png/logo.png" alt="логотип автошколы">
+            </a>
+
+            <ul class="menu" id="menu">
+                <li><a href="../index.html">Главная</a></li>
+                <li><a href="about.html">О школе</a></li>
+                <li><a href="cars.html" class="active">Машины</a></li>
+                <li><a href="instructors.html">Инструкторы</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+                <li><a href="reagistration.html">Записаться</a></li>
+            </ul>
+
+            <button class="burger-btn" onclick="toggleMenu()">☰</button>
+        </div>
+    </header>
+
+    <!-- СПИСОК УЧЕБНЫХ МАШИН -->
+    <section class="cards">
+        <h2>Наши учебные машины</h2>
+        <!-- у карточек машин своя вёрстка car-card: только картинка,
+             вся нужная информация уже написана на самом фото -->
+        <div class="card-list car-grid">
+            <div class="card car-card">
+                <img src="../png/car1.png" alt="Kia Rio">
+            </div>
+            <div class="card car-card">
+                <img src="../png/car2.png" alt="Hyundai Solaris">
+            </div>
+            <div class="card car-card">
+                <img src="../png/car3.png" alt="учебная машина 3">
+            </div>
+            <div class="card car-card">
+                <img src="../png/car4.png" alt="учебная машина 4">
+            </div>
+            <div class="card car-card">
+                <img src="../png/car5.png" alt="учебная машина 5">
+            </div>
+        </div>
+    </section>
+
+    <!-- ФУТЕР -->
+
+    <footer class="footer">
+        <div class="footer-wrapper">
+            <div class="footer-col">
+                <h4>АвтоСтарт</h4>
+                <p>Автошкола категории B</p>
+            </div>
+            <div class="footer-col">
+                <h4>Контакты</h4>
+                <a href="tel:+74957000000">+7 (495) 700-00-00</a>
+                <a href="mailto:info@autostart.example">info@autostart.example</a>
+            </div>
+            <div class="footer-col">
+                <h4>Страницы</h4>
+                <a href="about.html">О школе</a>
+                <a href="contacts.html">Контакты</a>
+                <a href="admin.html">Админ-панель</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>
