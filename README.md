@@ -77,7 +77,21 @@ Autoschool/
 
 ## 👨‍💻 Автор
 
-**Ваше имя или GitHub-ник**
+**kirill498 & xdennyfrontc**
+
+<p align="center">
+  <img
+    src="https://github.com/ТВОЙ_GITHUB_НИК.png"
+    width="100"
+    height="100"
+    style="border-radius: 50%;"
+    alt="Фото автора"
+  />
+  <br>
+  <strong>https://github.com/xdennyfrontc</strong>
+  <br>
+  <sub>Frontend Developer</sub>
+</p>
 
 ---
 
