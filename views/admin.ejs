@@ -1,31 +1,71 @@
 <%- include('partials/header') %>
-    <!-- ФОРМА ВХОДА В АДМИНКУ -->
-    <section class="form-block" id="loginBlock">
-        <form class="form-box" onsubmit="checkLogin()">
+
+    <% if (!loggedIn) { %>
+
+    <!-- ФОРМА ВХОДА -->
+    <section class="form-block">
+        <form class="form-box" method="POST" action="/admin/login">
             <h2>Вход для администратора</h2>
 
             <div class="form-group">
                 <label for="adminLogin">Логин</label>
-                <input type="text" id="adminLogin" placeholder="admin">
+                <input type="text" id="adminLogin" name="login" autocomplete="username" required>
             </div>
 
             <div class="form-group">
                 <label for="adminPassword">Пароль</label>
-                <input type="password" id="adminPassword" placeholder="пароль">
+                <input type="password" id="adminPassword" name="password" autocomplete="current-password" required>
             </div>
 
-            <div class="form-error" id="loginError"></div>
+            <% if (error) { %>
+            <div class="form-error"><%= error %></div>
+            <% } %>
 
             <button type="submit" class="btn">Войти</button>
-            <p class="admin-hint">Для теста: admin / 1234</p>
         </form>
     </section>
 
-    <!-- ПАНЕЛЬ С ЗАЯВКАМИ, СНАЧАЛА СКРЫТА -->
-    <section class="page-content" id="panelBlock" style="display:none;">
+    <% } else { %>
+
+    <!-- ПАНЕЛЬ С ЗАЯВКАМИ -->
+    <section class="page-content">
         <h1>Заявки на обучение</h1>
-        <div id="zayavkiPlace"></div>
-        <button class="btn btn-dark" onclick="logoutAdmin()">Выйти</button>
+
+        <% if (applications.length === 0) { %>
+        <p>Заявок пока нет</p>
+        <% } else { %>
+        <div style="overflow-x: auto;">
+            <table class="admin-table">
+                <tr>
+                    <th>№</th>
+                    <th>Имя</th>
+                    <th>Телефон</th>
+                    <th>Дата</th>
+                    <th></th>
+                </tr>
+                <% applications.forEach(function (a, i) { %>
+                <tr>
+                    <td><%= i + 1 %></td>
+                    <td><%= a.name %></td>
+                    <td><%= a.phone %></td>
+                    <td><%= new Date(a.created_at).toLocaleString("ru-RU") %></td>
+                    <td>
+                        <form method="POST" action="/admin/applications/<%= a.id %>/delete"
+                              onsubmit="return confirm('Удалить эту заявку?')">
+                            <button type="submit" class="btn btn-dark">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+            </table>
+        </div>
+        <% } %>
+
+        <form method="POST" action="/admin/logout">
+            <button type="submit" class="btn btn-dark">Выйти</button>
+        </form>
     </section>
+
+    <% } %>
 
 <%- include('partials/footer') %>

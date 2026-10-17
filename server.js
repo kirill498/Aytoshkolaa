@@ -1,27 +1,47 @@
 // Главный файл сайта. Запуск: npm start
 
+require("dotenv").config();
+
 const express = require("express");
+const session = require("express-session");
+const bcrypt = require("bcryptjs");
 const path = require("path");
 const db = require("./db");
 
 const app = express();
 const PORT = 3000;
 
-// 1. Говорим Express, что страницы делаем через шаблоны EJS (папка views)
+// Секретная строка для подписи сессий. Без неё сайт не запустится.
+if (!process.env.SESSION_SECRET) {
+    console.error("В файле .env не задан SESSION_SECRET. Смотрите инструкцию.");
+    process.exit(1);
+}
+
+// 1. Шаблоны EJS (папка views)
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// 1.1 Учим сервер читать данные, которые браузер присылает в формате JSON
+// 1.1 Учим сервер читать данные из JSON (fetch) и из обычных HTML-форм
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+// 1.2 Сессии: сервер "помнит" вошедшего админа.
+// Браузер получает cookie с номером сессии, а сами данные хранятся на сервере.
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,                 // JavaScript на странице не может прочитать cookie
+        sameSite: "lax",                // защита от отправки форм с чужих сайтов
+        maxAge: 2 * 60 * 60 * 1000      // сессия живёт 2 часа
+    }
+}));
 
 // 2. Всё из папки public (css, js, картинки) отдаём как есть
 app.use(express.static(path.join(__dirname, "public")));
 
-// 3. Адреса страниц.
-// Когда браузер открывает адрес, сервер берёт шаблон из views и отправляет готовую страницу.
-// title - заголовок вкладки, active - какой пункт меню подсветить,
-// scripts - какие дополнительные js-файлы подключить на странице.
-
+// 3. Обычные страницы
 app.get("/", (req, res) => {
     res.render("index", { title: "АвтоСтарт - автошкола", active: "home", isHome: true });
 });
@@ -54,22 +74,12 @@ app.get("/registration", (req, res) => {
     });
 });
 
-app.get("/admin", (req, res) => {
-    res.render("admin", {
-        title: "Админ-панель - АвтоСтарт",
-        active: "admin",
-        scripts: ["/js/admin.js"]
-    });
-});
-
-// 3.1 Приём заявки из формы записи.
-// Браузер присылает имя и телефон, сервер проверяет их и записывает в базу.
+// 3.1 Приём заявки из формы записи
 app.post("/api/applications", async (req, res) => {
     const name = String(req.body.name || "").trim();
     const phone = String(req.body.phone || "").trim();
-    const digits = phone.replace(/[^0-9]/g, ""); // только цифры из телефона
+    const digits = phone.replace(/[^0-9]/g, "");
 
-    // проверка на сервере (проверку в браузере легко обойти, поэтому проверяем ещё раз)
     if (name.length < 2 || name.length > 100) {
         return res.status(400).json({ ok: false, error: "Введите имя, пожалуйста" });
     }
@@ -78,13 +88,129 @@ app.post("/api/applications", async (req, res) => {
     }
 
     try {
-        // знаки вопроса - это "места для данных". MySQL подставляет name и phone сам
-        // и защищает базу от вредных запросов (SQL-инъекций)
         await db.query("INSERT INTO applications (name, phone) VALUES (?, ?)", [name, phone]);
         res.json({ ok: true });
     } catch (err) {
         console.error("Ошибка при записи заявки:", err.message);
         res.status(500).json({ ok: false, error: "Ошибка сервера, попробуйте позже" });
+    }
+});
+
+// ===== АДМИН-ПАНЕЛЬ =====
+
+const ADMIN_TITLE = "Админ-панель - АвтоСтарт";
+
+// Защита от подбора пароля: после 5 неудачных попыток с одного адреса
+// вход блокируется на 10 минут. Хранится в памяти сервера.
+const loginAttempts = {};
+const BLOCK_TIME = 10 * 60 * 1000;
+
+function tooManyAttempts(ip) {
+    var a = loginAttempts[ip];
+    if (!a) return false;
+    if (Date.now() - a.first > BLOCK_TIME) {
+        delete loginAttempts[ip];
+        return false;
+    }
+    return a.count >= 5;
+}
+
+function registerFail(ip) {
+    var a = loginAttempts[ip];
+    if (!a || Date.now() - a.first > BLOCK_TIME) {
+        loginAttempts[ip] = { count: 1, first: Date.now() };
+    } else {
+        a.count++;
+    }
+}
+
+// "Охранник": пропускает дальше только тех, кто вошёл как админ
+function requireAdmin(req, res, next) {
+    if (!req.session.adminId) {
+        return res.redirect("/admin");
+    }
+    next();
+}
+
+// Страница админки: если не вошли - форма входа, если вошли - таблица заявок
+app.get("/admin", async (req, res) => {
+    if (!req.session.adminId) {
+        return res.render("admin", { title: ADMIN_TITLE, active: "admin", loggedIn: false, error: null, applications: [] });
+    }
+
+    try {
+        const [rows] = await db.query(
+            "SELECT id, name, phone, created_at FROM applications ORDER BY created_at DESC, id DESC"
+        );
+        res.render("admin", { title: ADMIN_TITLE, active: "admin", loggedIn: true, error: null, applications: rows });
+    } catch (err) {
+        console.error("Ошибка чтения заявок:", err.message);
+        res.status(500).send("Ошибка сервера");
+    }
+});
+
+// Вход
+app.post("/admin/login", async (req, res) => {
+    const ip = req.ip;
+    const showError = function (code, text) {
+        return res.status(code).render("admin", { title: ADMIN_TITLE, active: "admin", loggedIn: false, error: text, applications: [] });
+    };
+
+    if (tooManyAttempts(ip)) {
+        return showError(429, "Слишком много попыток. Подождите 10 минут.");
+    }
+
+    const login = String(req.body.login || "").trim();
+    const password = String(req.body.password || "");
+
+    try {
+        const [rows] = await db.query("SELECT id, password_hash FROM admins WHERE login = ?", [login]);
+
+        // bcrypt.compare сам превращает введённый пароль в "кашу" и сравнивает с той, что в базе
+        const ok = rows.length > 0 && await bcrypt.compare(password, rows[0].password_hash);
+
+        if (!ok) {
+            registerFail(ip);
+            return showError(401, "Неверный логин или пароль");
+        }
+
+        delete loginAttempts[ip];
+
+        // новая сессия после входа, затем запоминаем номер админа
+        req.session.regenerate(function (err) {
+            if (err) return res.status(500).send("Ошибка сервера");
+            req.session.adminId = rows[0].id;
+            req.session.save(function () {
+                res.redirect("/admin");
+            });
+        });
+    } catch (err) {
+        console.error("Ошибка входа:", err.message);
+        res.status(500).send("Ошибка сервера");
+    }
+});
+
+// Выход
+app.post("/admin/logout", (req, res) => {
+    req.session.destroy(function () {
+        res.redirect("/admin");
+    });
+});
+
+// Удаление заявки (только для вошедшего админа)
+app.post("/admin/applications/:id/delete", requireAdmin, async (req, res) => {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id)) {
+        return res.status(400).send("Неверный номер заявки");
+    }
+
+    try {
+        await db.query("DELETE FROM applications WHERE id = ?", [id]);
+        res.redirect("/admin");
+    } catch (err) {
+        console.error("Ошибка удаления заявки:", err.message);
+        res.status(500).send("Ошибка сервера");
     }
 });
 
@@ -97,7 +223,6 @@ app.use((req, res) => {
 app.listen(PORT, async () => {
     console.log("Сайт запущен: http://localhost:" + PORT);
 
-    // сразу проверяем, что база доступна
     try {
         await db.query("SELECT 1");
         console.log("База данных подключена");

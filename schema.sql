@@ -13,3 +13,10 @@ CREATE TABLE IF NOT EXISTS applications (
     phone      VARCHAR(30)  NOT NULL,                    -- телефон
     created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP  -- дата и время заявки
 );
+
+-- Таблица администраторов. Пароль хранится НЕ как есть, а в виде хеша
+CREATE TABLE IF NOT EXISTS admins (
+    id            INT AUTO_INCREMENT PRIMARY KEY,
+    login         VARCHAR(50)  NOT NULL UNIQUE,          -- UNIQUE: два одинаковых логина нельзя
+    password_hash VARCHAR(255) NOT NULL                  -- "каша" из пароля
+);
