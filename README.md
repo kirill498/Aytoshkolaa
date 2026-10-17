@@ -79,19 +79,19 @@ Autoschool/
 
 **kirill498 & xdennyfrontc**
 
+
 <p align="center">
   <img
-    src="https://github.com/ТВОЙ_GITHUB_НИК.png"
+    src="https://github.com/xdennyfrontc.png"
     width="100"
-    height="100"
-    style="border-radius: 50%;"
-    alt="Фото автора"
+    alt="Аватар xdennyfrontc"
   />
-  <br>
-  <strong>https://github.com/xdennyfrontc</strong>
-  <br>
-  <sub>Frontend Developer</sub>
+  <br />
+  <strong>xdennyfrontc</strong>
+  <br />
+  <sub>Frontend Developer · Paren</sub>
 </p>
+
 
 ---
 
