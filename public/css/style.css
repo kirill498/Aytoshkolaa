@@ -1,0 +1,409 @@
+/* ===== ОБЩИЕ НАСТРОЙКИ ===== */
+/* сбрасываем стандартные отступы у всех элементов */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #222222;
+
+    /* делаем футер "прижатым" ко низу, даже если контента мало */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* ===== ШАПКА САЙТА ===== */
+.header {
+    background-color: #1b1e23;
+    color: white;
+    padding: 15px 20px;
+}
+
+.header-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    height: 46px;
+    width: auto;
+}
+
+/* меню в шапке */
+.menu {
+    display: flex;
+    gap: 20px;
+}
+
+.menu li a {
+    color: white;
+    font-size: 16px;
+}
+
+.menu li a:hover {
+    color: #f5b614;
+}
+
+/* подсвечиваем жёлтым пункт меню той страницы, на которой сейчас находится пользователь */
+.menu li a.active {
+    color: #f5b614;
+}
+
+/* кнопка бургер для телефонов, по умолчанию скрыта */
+.burger-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+/* ===== ГЛАВНЫЙ БЛОК (HERO) ===== */
+.hero {
+    background-color: #ffffff;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    color: #1b1e23;
+}
+
+.hero p {
+    font-size: 16px;
+    max-width: 600px;
+    margin: 0 auto 20px auto;
+    color: #555555;
+}
+
+/* ===== КНОПКИ ===== */
+.btn {
+    display: inline-block;
+    padding: 12px 22px;
+    background-color: #f5b614;
+    color: #1b1e23;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.btn:hover {
+    background-color: #e0a600;
+}
+
+.btn-dark {
+    background-color: #1b1e23;
+    color: white;
+}
+
+/* ===== ФАКТЫ / ЦИФРЫ НА ГЛАВНОЙ ===== */
+.facts {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.fact-item {
+    text-align: center;
+}
+
+.fact-item .number {
+    font-size: 26px;
+    font-weight: bold;
+    color: #f5b614;
+    display: block;
+}
+
+/* ===== БЛОК С КАРТОЧКАМИ (машины, инструкторы) ===== */
+.cards {
+    padding: 40px 20px;
+}
+
+.cards h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+.card-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.card {
+    background-color: white;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    width: 280px;
+    padding: 15px;
+    text-align: center;
+}
+
+/* карточка машины: побольше, без отступа под картинкой -
+   текста внутри карточки нет, вся инфа на самой картинке */
+.car-card {
+    width: 340px;
+    padding: 10px;
+}
+
+.car-card img {
+    margin-bottom: 0;
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+}
+
+.card img {
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.card h3 {
+    margin-bottom: 8px;
+}
+
+.card p {
+    font-size: 14px;
+    color: #666666;
+    margin-bottom: 10px;
+}
+
+/* ===== ТАРИФЫ ===== */
+.prices {
+    padding: 40px 20px;
+    background-color: #ffffff;
+}
+
+.tab-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.tab-btn {
+    padding: 10px 18px;
+    background-color: #eeeeee;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.tab-btn.active {
+    background-color: #f5b614;
+    font-weight: bold;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ===== ФОРМА ЗАПИСИ ===== */
+.form-block {
+    background-color: #1b1e23;
+    color: white;
+    padding: 40px 20px;
+}
+
+.form-box {
+    max-width: 420px;
+    margin: 0 auto;
+    background-color: #22262d;
+    padding: 25px;
+    border-radius: 8px;
+}
+
+.form-box h2 {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #444444;
+    background-color: #2c2f36;
+    color: white;
+    font-family: inherit;
+}
+
+.form-error {
+    color: #ff8080;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.form-success {
+    background-color: #2e8b57;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* ===== ФУТЕР ===== */
+.footer {
+    background-color: #14161a;
+    color: #aaaaaa;
+    padding: 45px 20px;
+    font-size: 14px;
+
+    /* этот margin-top: auto и прижимает футер к низу экрана */
+    margin-top: auto;
+}
+
+/* на главной странице внизу есть жёлтая плашка (.promo-line),
+   поэтому футеру нужно больше места снизу, чтобы плашка его не перекрывала */
+.footer-home {
+    padding-bottom: 90px;
+}
+
+.footer-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: space-between;
+}
+
+.footer-col h4 {
+    color: white;
+    margin-bottom: 10px;
+}
+
+.footer-col p,
+.footer-col a {
+    margin-bottom: 6px;
+    display: block;
+    color: #aaaaaa;
+}
+
+.footer-col a:hover {
+    color: white;
+}
+
+/* ===== НИЖНЯЯ ЖЁЛТАЯ ПЛАШКА ===== */
+.promo-line {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #f5b614;
+    color: #1b1e23;
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-weight: bold;
+    font-size: 13px;
+    text-align: center;
+}
+
+/* кнопка внутри плашки должна быть компактнее обычной .btn */
+.promo-line .btn {
+    padding: 7px 14px;
+    font-size: 13px;
+}
+
+/* ===== ПРОСТАЯ СТРАНИЦА (about, contacts) ===== */
+.page-content {
+    padding: 40px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.page-content h1 {
+    margin-bottom: 20px;
+}
+
+.page-content p {
+    margin-bottom: 15px;
+    color: #444444;
+}
+
+.contacts-info p {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+/* ===== АДМИН-ПАНЕЛЬ ===== */
+.admin-hint {
+    color: #7c8090;
+    font-size: 13px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    margin-bottom: 20px;
+}
+
+.admin-table th,
+.admin-table td {
+    border: 1px solid #dddddd;
+    padding: 10px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.admin-table th {
+    background-color: #1b1e23;
+    color: white;
+} 

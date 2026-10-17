@@ -1,0 +1,43 @@
+<%- include('partials/header') %>
+    <!-- СПИСОК ИНСТРУКТОРОВ -->
+    <section class="cards">
+        <h2>Наши инструкторы</h2>
+        <div class="card-list">
+
+            <div class="card">
+                <img src="https://auto-stet.ru/upload/resize_cache/iblock/6c3/180_180_0/2xueewr3tvzzwz2qlmnc6kw0wydcwxvm.jpg" alt="инструктор Сергей">
+                <h3>Сергей Петров</h3>
+                <p>Стаж вождения 15 лет, учит спокойно и без спешки.</p>
+                <button class="btn btn-dark" onclick="toggleInfo('info1')">Подробнее</button>
+                <p id="info1" style="display:none;">
+                    Работает в школе с 2016 года, специализируется на учениках,
+                    которые раньше никогда не сидели за рулём.
+                </p>
+            </div>
+
+            <div class="card">
+                <img src="https://auto-stet.ru/upload/resize_cache/iblock/1ff/180_180_0/55tcuh7xpbptonf2tr64dapap020dtwh.jpg" alt="инструктор Анна">
+                <h3>Анна Кузнецова</h3>
+                <p>Учит на автомате, хорошо объясняет правила парковки.</p>
+                <button class="btn btn-dark" onclick="toggleInfo('info2')">Подробнее</button>
+                <p id="info2" style="display:none;">
+                    В прошлом работала автоинструктором в другом городе,
+                    ученики отмечают её терпение.
+                </p>
+            </div>
+
+            <div class="card">
+                <img src="https://auto-stet.ru/upload/resize_cache/iblock/fb1/180_180_0/yu54wtmxcsvaon9uyclweg8h57mlsl17.png" alt="инструктор Игорь">
+                <h3>Игорь Смирнов</h3>
+                <p>Готовит к вождению в городе и на трассе.</p>
+                <button class="btn btn-dark" onclick="toggleInfo('info3')">Подробнее</button>
+                <p id="info3" style="display:none;">
+                    Помогает ученикам, которые боятся ездить по городу
+                    с плотным потоком машин.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+<%- include('partials/footer') %>

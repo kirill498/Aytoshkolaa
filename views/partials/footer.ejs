@@ -1,0 +1,35 @@
+    <!-- ФУТЕР (один на все страницы) -->
+    <footer class="footer <%= locals.isHome ? 'footer-home' : '' %>">
+        <div class="footer-wrapper">
+            <div class="footer-col">
+                <h4>АвтоСтарт</h4>
+                <p>Автошкола категории B</p>
+            </div>
+            <div class="footer-col">
+                <h4>Контакты</h4>
+                <a href="tel:+74957000000">+7 (495) 700-00-00</a>
+                <a href="mailto:info@autostart.example">info@autostart.example</a>
+            </div>
+            <div class="footer-col">
+                <h4>Страницы</h4>
+                <a href="/about">О школе</a>
+                <a href="/contacts">Контакты</a>
+                <a href="/admin">Админ-панель</a>
+            </div>
+        </div>
+    </footer>
+
+    <% if (locals.isHome) { %>
+    <!-- НИЖНЯЯ ПЛАШКА (только на главной) -->
+    <div class="promo-line">
+        <span>Успейте записаться на обучение по цене от 15 000 рублей</span>
+        <a href="/registration" class="btn">Записаться сейчас</a>
+    </div>
+    <% } %>
+
+    <script src="/js/main.js"></script>
+    <% (locals.scripts || []).forEach(function (src) { %>
+    <script src="<%= src %>"></script>
+    <% }) %>
+</body>
+</html>
