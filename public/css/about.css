@@ -1,0 +1,408 @@
+/* ===== СТРАНИЦА "О ШКОЛЕ" ===== */
+
+/* три колонки: фото слева | текст по центру | фото справа */
+.about-layout {
+    width: 100%;                 /* без этого блок сжимается до ширины содержимого */
+    max-width: 1700px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 720px) minmax(0, 1fr);
+    gap: 30px;
+}
+
+/* ---------- ФОТО ПО БОКАМ ---------- */
+.about-photo {
+    position: sticky;            /* фото "едут" вместе с прокруткой и остаются на виду */
+    top: 24px;
+    align-self: start;           /* высота фиксированная, а не растягивается до конца страницы */
+    height: 620px;
+    margin: 0;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* серая заглушка с подписью: лежит под фото и видна, только пока фото нет */
+.photo-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    line-height: 1.5;
+    color: #8a8686;
+    background-color: #e4e1e1;
+    border: 2px dashed #bdb9b9;
+    border-radius: 16px;
+}
+
+/* фото растягивается на весь блок и обрезается по краям (cover), не искажаясь */
+.about-photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.about-photo:hover img {
+    transform: scale(1.04);
+}
+
+/* подпись внизу фото на тёмном градиенте */
+.about-photo figcaption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 45px 20px 18px;
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: bold;
+    background: linear-gradient(to top, rgba(27, 30, 35, 0.85), rgba(27, 30, 35, 0));
+}
+
+/* ---------- ЦЕНТРАЛЬНАЯ КОЛОНКА ---------- */
+.about-center h1 {
+    font-size: 34px;
+    color: #1b1e23;
+    margin-bottom: 14px;
+}
+
+.about-center p {
+    line-height: 1.6;
+    color: #444444;
+    margin-bottom: 12px;
+}
+
+.about-center .about-lead {
+    font-size: 17px;
+    color: #333333;
+}
+
+/* четыре тёмные плитки с цифрами */
+.about-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 26px 0;
+}
+
+.stat {
+    padding: 18px 10px;
+    text-align: center;
+    background-color: #1b1e23;
+    border-radius: 12px;
+}
+
+.stat strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 28px;
+    color: #f5b614;
+}
+
+.stat span {
+    font-size: 13px;
+    color: #cfd2d6;
+}
+
+/* белые карточки (режим работы, контакты) */
+.about-card {
+    margin-bottom: 20px;
+    padding: 24px 26px;
+    background-color: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.about-card h2 {
+    font-size: 20px;
+    color: #1b1e23;
+}
+
+.about-card > h2 {
+    margin-bottom: 8px;
+}
+
+.card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+/* плашка "Сейчас открыто / закрыто". Пока JS её не заполнил, она скрыта (:empty) */
+.open-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 20px;
+}
+
+.open-status:empty {
+    display: none;
+}
+
+/* цветная точка перед текстом */
+.open-status::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background-color: currentColor;
+    border-radius: 50%;
+}
+
+.open-status.is-open {
+    color: #1e7d46;
+    background-color: #e5f5ec;
+}
+
+.open-status.is-closed {
+    color: #b3261e;
+    background-color: #fbe9e7;
+}
+
+/* когда открыто, точка мягко "пульсирует" */
+.open-status.is-open::before {
+    animation: status-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes status-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.35; transform: scale(1.5); }
+}
+
+/* строки "название слева, значение справа" */
+.hours-list li,
+.contact-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 11px 0;
+    font-size: 15px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.hours-list li:last-child,
+.contact-list li:last-child {
+    border-bottom: none;
+}
+
+.hours-list span {
+    color: #666666;
+}
+
+.hours-list strong {
+    color: #1b1e23;
+    text-align: right;
+}
+
+/* контакты: слева серая подпись фиксированной ширины, справа значение */
+.contact-list li {
+    justify-content: flex-start;
+}
+
+.c-label {
+    flex: 0 0 90px;
+    font-size: 14px;
+    color: #888888;
+}
+
+.contact-list a {
+    font-weight: bold;
+    color: #1b1e23;
+}
+
+.contact-list a:hover {
+    color: #c98f00;
+}
+
+.about-card .btn {
+    margin-top: 16px;
+}
+
+/* "Почему выбирают нас": три карточки в ряд */
+.about-features {
+    margin: 30px 0 10px;
+}
+
+.about-features h2 {
+    margin-bottom: 14px;
+    font-size: 20px;
+    color: #1b1e23;
+}
+
+.feature-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.feature {
+    padding: 20px 18px;
+    background-color: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    margin-bottom: 12px;
+    font-weight: bold;
+    color: #1b1e23;
+    background-color: #f5b614;
+    border-radius: 50%;
+}
+
+.feature h3 {
+    margin-bottom: 6px;
+    font-size: 16px;
+    color: #1b1e23;
+}
+
+.feature p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #555555;
+}
+
+.about-center .about-license {
+    margin: 14px 0 24px;
+    font-size: 14px;
+    color: #777777;
+}
+
+/* тёмный блок с призывом записаться */
+.about-cta {
+    padding: 28px 24px;
+    text-align: center;
+    background-color: #1b1e23;
+    border-radius: 14px;
+}
+
+.about-cta h2 {
+    margin-bottom: 6px;
+    font-size: 22px;
+    color: #ffffff;
+}
+
+.about-center .about-cta p {
+    margin-bottom: 18px;
+    color: #cfd2d6;
+}
+
+/* ---------- ПЛАВНОЕ ПОЯВЛЕНИЕ ПРИ ЗАГРУЗКЕ ---------- */
+/* каждый блок центральной колонки чуть позже предыдущего */
+.about-center > *,
+.about-photo {
+    animation: about-fade 0.6s ease both;
+}
+
+.about-center > *:nth-child(2) { animation-delay: 0.08s; }
+.about-center > *:nth-child(3) { animation-delay: 0.16s; }
+.about-center > *:nth-child(4) { animation-delay: 0.24s; }
+.about-center > *:nth-child(5) { animation-delay: 0.32s; }
+.about-center > *:nth-child(6) { animation-delay: 0.4s; }
+.about-center > *:nth-child(7) { animation-delay: 0.48s; }
+.about-center > *:nth-child(8) { animation-delay: 0.56s; }
+.about-photo-right { animation-delay: 0.2s; }
+
+@keyframes about-fade {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- АДАПТИВНОСТЬ ---------- */
+
+/* ноутбук/планшет: центр на всю ширину, два фото рядом под ним */
+@media (max-width: 1180px) {
+    .about-layout {
+        grid-template-columns: 1fr 1fr;
+        max-width: 900px;
+    }
+
+    .about-center {
+        grid-column: 1 / -1;     /* растягиваем на обе колонки */
+        order: 1;
+    }
+
+    .about-photo {
+        position: relative;
+        top: auto;
+        height: 280px;
+        order: 2;
+    }
+}
+
+/* телефон */
+@media (max-width: 700px) {
+    .about-layout {
+        grid-template-columns: 1fr;
+        padding: 25px 15px 40px;
+    }
+
+    .about-center h1 {
+        font-size: 28px;
+    }
+
+    .about-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .feature-list {
+        grid-template-columns: 1fr;
+    }
+
+    .about-card {
+        padding: 20px 18px;
+    }
+
+    .hours-list li {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .hours-list strong {
+        text-align: left;
+    }
+
+    .contact-list li {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .c-label {
+        flex: none;
+    }
+
+    .about-photo {
+        height: 240px;
+    }
+}
+
+/* если в системе отключены анимации, ничего не двигаем */
+@media (prefers-reduced-motion: reduce) {
+    .about-center > *,
+    .about-photo,
+    .open-status::before {
+        animation: none !important;
+    }
+
+    .about-photo img {
+        transition: none;
+    }
+}

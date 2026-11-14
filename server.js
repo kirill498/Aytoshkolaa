@@ -52,6 +52,15 @@ app.get("/", (req, res) => {
 });
 
 app.get("/about", (req, res) => {
+    res.render("about", {
+        title: "О школе - АвтоСтарт",
+        active: "about",
+        styles: ["/css/about.css"],
+        scripts: ["/js/about.js"]
+    });
+});;
+
+app.get("/about", (req, res) => {
     res.render("about", { title: "О школе - АвтоСтарт", active: "about" });
 });
 

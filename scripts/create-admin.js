@@ -4,7 +4,7 @@
 
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
-const db = require("./database/db.js");
+const db = require("../database/db");
 
 async function main() {
     const login = process.argv[2];

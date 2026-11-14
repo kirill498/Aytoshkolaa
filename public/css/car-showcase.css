@@ -84,7 +84,7 @@
 
 /* кружок на машине: сначала нулевого размера */
 .car-line circle {
-    fill: #f5b614;
+    fill: none;
     stroke: #1b1e23;
     stroke-width: 2;
     opacity: 0;

@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/responsive.css">
     <link rel="stylesheet" href="/css/car-showcase.css">
+    <% (locals.styles || []).forEach(function (href) { %>
+    <link rel="stylesheet" href="<%= href %>">
+    <% }) %>
 </head>
 <body>
 
