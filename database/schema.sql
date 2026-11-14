@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS applications (
     id         INT AUTO_INCREMENT PRIMARY KEY,           -- номер заявки, MySQL ставит сам
     name       VARCHAR(100) NOT NULL,                    -- имя
     phone      VARCHAR(30)  NOT NULL,                    -- телефон
+    email      VARCHAR(100) NULL,                        -- почта (может быть пустой)
+    car        VARCHAR(100) NULL,                        -- какая машина понравилась (может быть пустой)
     created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP  -- дата и время заявки
 );
 

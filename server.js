@@ -43,7 +43,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // 3. Обычные страницы
 app.get("/", (req, res) => {
-    res.render("index", { title: "АвтоСтарт - автошкола", active: "home", isHome: true });
+    res.render("index", {
+        title: "АвтоСтарт - автошкола",
+        active: "home",
+        isHome: true,
+        scripts: ["/js/car-showcase.js"]
+    });
 });
 
 app.get("/about", (req, res) => {
@@ -74,10 +79,12 @@ app.get("/registration", (req, res) => {
     });
 });
 
-// 3.1 Приём заявки из формы записи
+// 3.1 Приём заявки (из формы на /registration и из окна на главной)
 app.post("/api/applications", async (req, res) => {
     const name = String(req.body.name || "").trim();
     const phone = String(req.body.phone || "").trim();
+    const email = String(req.body.email || "").trim();   // необязательно: в старой форме его нет
+    const car = String(req.body.car || "").trim();       // необязательно: какая машина понравилась
     const digits = phone.replace(/[^0-9]/g, "");
 
     if (name.length < 2 || name.length > 100) {
@@ -86,9 +93,20 @@ app.post("/api/applications", async (req, res) => {
     if (digits.length < 10 || digits.length > 15) {
         return res.status(400).json({ ok: false, error: "Проверьте номер телефона" });
     }
+    // email проверяем, только если его прислали
+    if (email !== "" && (email.length > 100 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
+        return res.status(400).json({ ok: false, error: "Проверьте адрес почты" });
+    }
+    if (car.length > 100) {
+        return res.status(400).json({ ok: false, error: "Слишком длинное название машины" });
+    }
 
     try {
-        await db.query("INSERT INTO applications (name, phone) VALUES (?, ?)", [name, phone]);
+        // если email или car пустые, в базу записываем NULL (то есть "нет значения")
+        await db.query(
+            "INSERT INTO applications (name, phone, email, car) VALUES (?, ?, ?, ?)",
+            [name, phone, email || null, car || null]
+        );
         res.json({ ok: true });
     } catch (err) {
         console.error("Ошибка при записи заявки:", err.message);
@@ -140,7 +158,7 @@ app.get("/admin", async (req, res) => {
 
     try {
         const [rows] = await db.query(
-            "SELECT id, name, phone, created_at FROM applications ORDER BY created_at DESC, id DESC"
+            "SELECT id, name, phone, email, car, created_at FROM applications ORDER BY created_at DESC, id DESC"
         );
         res.render("admin", { title: ADMIN_TITLE, active: "admin", loggedIn: true, error: null, applications: rows });
     } catch (err) {

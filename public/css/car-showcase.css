@@ -1,0 +1,414 @@
+/* ===== БЛОК С АВТОМОБИЛЕМ НА ГЛАВНОЙ + ВСПЛЫВАЮЩЕЕ ОКНО ===== */
+
+/* ---------- сам блок ---------- */
+.car-showcase {
+    background-color: #f5f3f3;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.car-showcase h2 {
+    font-size: 26px;
+    color: #1b1e23;
+    margin-bottom: 8px;
+}
+
+.car-showcase-sub {
+    color: #666666;
+    font-size: 15px;
+    margin-bottom: 35px;
+}
+
+/* три колонки: слева кнопка "Другие авто", по центру машина, справа пусто.
+   Пустая правая колонка нужна, чтобы машина стояла ровно по центру */
+.car-showcase-row {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 500px) 1fr;
+    align-items: center;
+    gap: 30px;
+}
+
+.car-other-btn {
+    justify-self: end;   /* прижимаем кнопку ближе к машине */
+}
+
+/* кнопка с тёмным текстом и рамкой, при наведении заливается тёмным */
+.btn-outline {
+    background-color: transparent;
+    color: #1b1e23;
+    border: 2px solid #1b1e23;
+}
+
+.btn-outline:hover {
+    background-color: #1b1e23;
+    color: #ffffff;
+}
+
+/* машина + кнопка под ней */
+.car-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+}
+
+/* ---------- карточка машины ---------- */
+.car-card {
+    position: relative;        /* чтобы панель с данными можно было положить поверх картинки */
+    width: 100%;
+    aspect-ratio: 2 / 1;       /* пропорции 500x250 сохраняются при любой ширине */
+    outline: none;
+}
+
+.car-photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* мягкая тень под машиной (работает и с прозрачным PNG) */
+    filter: drop-shadow(0 12px 10px rgba(0, 0, 0, 0.18));
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+/* панель с характеристиками: по умолчанию невидима и чуть опущена вниз */
+.car-info {
+    position: absolute;
+    inset: 0;                  /* растягиваем на всю карточку */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 16px 26px;
+    text-align: left;
+    background-color: rgba(255, 255, 255, 0.92);
+    border-radius: 14px;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;      /* панель не должна "перехватывать" мышь */
+}
+
+.car-info h3 {
+    font-size: 17px;
+    color: #1b1e23;
+    margin-bottom: 8px;
+}
+
+.car-specs li {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #e3e0e0;
+    font-size: 14px;
+}
+
+.car-specs li:last-child {
+    border-bottom: none;
+}
+
+.car-specs span {
+    color: #777777;
+}
+
+.car-specs strong {
+    color: #1b1e23;
+}
+
+/* когда панель открыта (клавиатурой или тапом): машина бледнеет, панель всплывает */
+.car-card.is-open .car-photo,
+.car-card:focus-visible .car-photo {
+    opacity: 0.2;
+    transform: scale(0.92);
+}
+
+.car-card.is-open .car-info,
+.car-card:focus-visible .car-info {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* то же самое при наведении мыши.
+   (hover: hover) значит "устройство умеет наводить", на телефонах это не включается */
+@media (hover: hover) {
+    .car-card:hover .car-photo {
+        opacity: 0.2;
+        transform: scale(0.92);
+    }
+
+    .car-card:hover .car-info {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------- всплывающее окно ---------- */
+
+/* тёмная подложка на весь экран */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: rgba(10, 12, 15, 0.65);
+
+    /* закрыто: невидимо. visibility с задержкой, чтобы окно успело плавно исчезнуть */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+
+/* JS добавляет класс open, когда нужно показать окно */
+.modal-overlay.open {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0s;
+}
+
+/* само окно: выезжает снизу и слегка "подпрыгивает" */
+.modal-box {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    max-height: 100%;
+    overflow-y: auto;
+    padding: 30px 25px 25px;
+    background-color: #22262d;
+    color: #ffffff;
+    border-radius: 10px;
+    opacity: 0;
+    transform: translateY(35px) scale(0.95);
+    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2), opacity 0.3s ease;
+}
+
+.modal-overlay.open .modal-box {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.modal-box h2 {
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+.modal-car {
+    text-align: center;
+    color: #bbbbbb;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.modal-close {
+    position: absolute;
+    top: 8px;
+    right: 14px;
+    background: none;
+    border: none;
+    color: #aaaaaa;
+    font-size: 30px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.modal-close:hover {
+    color: #ffffff;
+}
+
+/* ---------- "Я не робот" ---------- */
+.robot-check {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background-color: #2c2f36;
+    border: 1px solid #444444;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 6px;
+}
+
+.robot-check:focus-visible {
+    outline: 2px solid #f5b614;
+    outline-offset: 2px;
+}
+
+/* квадратик-чекбокс */
+.robot-box {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    background-color: #1b1e23;
+    border: 2px solid #888888;
+    border-radius: 4px;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+/* крутящееся колёсико (пока "проверяем") */
+.robot-spinner {
+    position: absolute;
+    inset: 1px;
+    border: 3px solid #444444;
+    border-top-color: #f5b614;
+    border-radius: 50%;
+    opacity: 0;
+}
+
+/* галочка (после проверки) */
+.robot-tick {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+    opacity: 0;
+    transform: scale(0.3);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.robot-check.loading .robot-spinner {
+    opacity: 1;
+    animation: robot-spin 0.7s linear infinite;
+}
+
+.robot-check.checked .robot-box {
+    background-color: #2e8b57;
+    border-color: #2e8b57;
+}
+
+.robot-check.checked .robot-tick {
+    opacity: 1;
+    transform: scale(1);
+}
+
+@keyframes robot-spin {
+    to { transform: rotate(360deg); }
+}
+
+.robot-error {
+    margin-bottom: 14px;
+    min-height: 16px;
+}
+
+/* кнопка отправки, пока идёт запрос */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* ---------- "Спасибо" после отправки ---------- */
+.modal-success {
+    text-align: center;
+    padding: 10px 0 5px;
+}
+
+.modal-success p {
+    color: #cccccc;
+    margin: 8px 0 20px;
+}
+
+.success-icon {
+    width: 62px;
+    height: 62px;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2e8b57;
+    border-radius: 50%;
+    font-size: 30px;
+    animation: pop 0.5s ease;
+}
+
+@keyframes pop {
+    0%   { transform: scale(0); }
+    70%  { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+/* ---------- АДАПТИВНОСТЬ ЭТОГО БЛОКА ---------- */
+
+/* планшет и уже: всё в одну колонку, "Другие авто" уезжает под чёрную кнопку */
+@media (max-width: 900px) {
+    .car-showcase-row {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 20px;
+    }
+
+    .car-other-btn {
+        order: 2;               /* order меняет порядок: кнопка идёт после машины */
+        justify-self: center;
+    }
+}
+
+/* телефон: панель с данными не лежит поверх машины, а раскрывается под ней по тапу */
+@media (max-width: 600px) {
+    .car-showcase {
+        padding: 40px 15px;
+    }
+
+    .car-card {
+        aspect-ratio: auto;
+    }
+
+    .car-photo {
+        height: auto;
+        aspect-ratio: 2 / 1;
+    }
+
+    .car-info {
+        position: static;
+        max-height: 0;
+        overflow: hidden;
+        padding: 0 16px;
+        opacity: 0;
+        transform: none;
+        box-shadow: none;
+        transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+    }
+
+    .car-card.is-open .car-info,
+    .car-card:focus-visible .car-info {
+        max-height: 320px;
+        padding: 16px;
+        margin-top: 10px;
+        opacity: 1;
+    }
+
+    /* на телефоне машина при открытии панели остаётся яркой */
+    .car-card.is-open .car-photo,
+    .car-card:focus-visible .car-photo,
+    .car-card:hover .car-photo {
+        opacity: 1;
+        transform: none;
+    }
+
+    .modal-box {
+        padding: 28px 18px 20px;
+    }
+}
+
+/* если у человека в системе включено "уменьшить анимацию", отключаем движение */
+@media (prefers-reduced-motion: reduce) {
+    .car-photo,
+    .car-info,
+    .modal-overlay,
+    .modal-box,
+    .robot-tick {
+        transition: none;
+    }
+
+    .success-icon,
+    .robot-check.loading .robot-spinner {
+        animation: none;
+    }
+}

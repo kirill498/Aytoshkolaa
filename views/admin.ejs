@@ -40,6 +40,8 @@
                     <th>№</th>
                     <th>Имя</th>
                     <th>Телефон</th>
+                    <th>Email</th>
+                    <th>Авто</th>
                     <th>Дата</th>
                     <th></th>
                 </tr>
@@ -48,6 +50,8 @@
                     <td><%= i + 1 %></td>
                     <td><%= a.name %></td>
                     <td><%= a.phone %></td>
+                    <td><%= a.email || '—' %></td>
+                    <td><%= a.car || '—' %></td>
                     <td><%= new Date(a.created_at).toLocaleString("ru-RU") %></td>
                     <td>
                         <form method="POST" action="/admin/applications/<%= a.id %>/delete"
