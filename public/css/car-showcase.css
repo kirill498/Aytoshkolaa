@@ -3,7 +3,7 @@
 /* ---------- сам блок ---------- */
 .car-showcase {
     background-color: #f5f3f3;
-    padding: 60px 20px;
+    padding: 60px 20px 55px;
     text-align: center;
 }
 
@@ -16,22 +16,202 @@
 .car-showcase-sub {
     color: #666666;
     font-size: 15px;
-    margin-bottom: 35px;
+    margin-bottom: 20px;
 }
 
-/* три колонки: слева кнопка "Другие авто", по центру машина, справа пусто.
-   Пустая правая колонка нужна, чтобы машина стояла ровно по центру */
-.car-showcase-row {
-    max-width: 1100px;
+/* ---------- СЦЕНА: машина в центре, выноски по краям ---------- */
+/* Сцена - прямоугольник 1000 x 320. Всё внутри позиционируется в процентах от него,
+   поэтому при уменьшении окна всё масштабируется вместе и линии не "уезжают" */
+.car-stage {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr minmax(0, 500px) 1fr;
-    align-items: center;
-    gap: 30px;
+    aspect-ratio: 1000 / 320;
 }
 
-.car-other-btn {
-    justify-self: end;   /* прижимаем кнопку ближе к машине */
+/* машина: ровно по центру сцены, ширина 50% (это и есть 500 px при ширине сцены 1000) */
+.car-card {
+    position: absolute;
+    left: 25%;
+    top: 10.9375%;
+    width: 50%;
+    height: 78.125%;
+    outline: none;
+    cursor: pointer;
+}
+
+.car-photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* мягкая тень под машиной (работает и с прозрачным PNG) */
+    filter: drop-shadow(0 12px 10px rgba(0, 0, 0, 0.18));
+    transition: transform 0.5s ease;
+}
+
+/* ---------- ЛИНИИ ВЫНОСОК ---------- */
+/* SVG лежит поверх всей сцены. Мышь через него "проходит" к машине */
+.car-lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+}
+
+/* Задержка появления у каждой выноски своя: --d (delay).
+   Первая появляется сразу, вторая через 0,7 с, третья через 1,4 с */
+.line-1, .callout-1 { --d: 0s; }
+.line-2, .callout-2 { --d: 0.7s; }
+.line-3, .callout-3 { --d: 1.4s; }
+
+/* сама линия. pathLength="1" в разметке делает длину линии равной 1,
+   поэтому stroke-dasharray: 1 и stroke-dashoffset: 1 прячут линию целиком,
+   а когда offset становится 0, линия "дорисовывается" */
+.car-line path {
+    fill: none;
+    stroke: #1b1e23;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 0.3s ease;
+}
+
+/* кружок на машине: сначала нулевого размера */
+.car-line circle {
+    fill: #f5b614;
+    stroke: #1b1e23;
+    stroke-width: 2;
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* ---------- ТЕКСТЫ ВЫНОСОК ---------- */
+.car-callout {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+/* где стоит каждый текст: он "сидит" на горизонтальной части своей линии.
+   Проценты считаются от сцены: линия 1 и 2 на высоте 100 и 96 из 320, линия 3 на 268 */
+.callout-1 {
+    left: 4%;
+    width: 19.5%;
+    bottom: calc(68.75% + 8px);
+    text-align: left;
+}
+
+.callout-2 {
+    right: 4%;
+    width: 19%;
+    bottom: calc(70% + 8px);
+    text-align: right;
+}
+
+.callout-3 {
+    right: 4%;
+    width: 16%;
+    bottom: calc(16.25% + 8px);
+    text-align: right;
+}
+
+.callout-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #777777;
+}
+
+.callout-value {
+    font-size: clamp(20px, 2.8vw, 30px);
+    line-height: 1.1;
+    color: #1b1e23;
+}
+
+.callout-sub {
+    font-size: 13px;
+    color: #555555;
+}
+
+/* ---------- ЗАПУСК АНИМАЦИИ ---------- */
+/* Показываем выноски, когда машина "активна":
+     .is-open       - JS добавил по нажатию (телефон)
+     :focus-visible - человек дошёл до машины клавишей Tab
+   Задержки (transition-delay) выстраивают порядок:
+     1) кружок на машине     (сразу)
+     2) линия дорисовывается (+0,15 с)
+     3) текст появляется     (+0,5 с)
+   и всё это сдвигается на --d для выноски 2 и 3 */
+.car-card:is(.is-open, :focus-visible) .car-photo {
+    transform: translateY(-6px) scale(1.03);
+}
+
+.car-card:is(.is-open, :focus-visible) ~ .car-lines .car-line circle {
+    opacity: 1;
+    transform: scale(1);
+    transition-delay: var(--d);
+}
+
+.car-card:is(.is-open, :focus-visible) ~ .car-lines .car-line path {
+    stroke-dashoffset: 0;
+    transition-duration: 0.5s;
+    transition-delay: calc(var(--d) + 0.15s);
+}
+
+.car-card:is(.is-open, :focus-visible) ~ .car-callout {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: calc(var(--d) + 0.5s);
+}
+
+/* то же самое при наведении мыши.
+   (hover: hover) значит "устройство умеет наводить", на телефонах это не включается.
+   Когда мышь уходит, задержек нет, и всё плавно скрывается сразу */
+@media (hover: hover) {
+    .car-card:hover .car-photo {
+        transform: translateY(-6px) scale(1.03);
+    }
+
+    .car-card:hover ~ .car-lines .car-line circle {
+        opacity: 1;
+        transform: scale(1);
+        transition-delay: var(--d);
+    }
+
+    .car-card:hover ~ .car-lines .car-line path {
+        stroke-dashoffset: 0;
+        transition-duration: 0.5s;
+        transition-delay: calc(var(--d) + 0.15s);
+    }
+
+    .car-card:hover ~ .car-callout {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: calc(var(--d) + 0.5s);
+    }
+}
+
+/* ---------- КНОПКИ ПОД МАШИНОЙ ---------- */
+.car-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 10px;
 }
 
 /* кнопка с тёмным текстом и рамкой, при наведении заливается тёмным */
@@ -46,102 +226,6 @@
     color: #ffffff;
 }
 
-/* машина + кнопка под ней */
-.car-column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 22px;
-}
-
-/* ---------- карточка машины ---------- */
-.car-card {
-    position: relative;        /* чтобы панель с данными можно было положить поверх картинки */
-    width: 100%;
-    aspect-ratio: 2 / 1;       /* пропорции 500x250 сохраняются при любой ширине */
-    outline: none;
-}
-
-.car-photo {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    /* мягкая тень под машиной (работает и с прозрачным PNG) */
-    filter: drop-shadow(0 12px 10px rgba(0, 0, 0, 0.18));
-    transition: transform 0.5s ease, opacity 0.5s ease;
-}
-
-/* панель с характеристиками: по умолчанию невидима и чуть опущена вниз */
-.car-info {
-    position: absolute;
-    inset: 0;                  /* растягиваем на всю карточку */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 16px 26px;
-    text-align: left;
-    background-color: rgba(255, 255, 255, 0.92);
-    border-radius: 14px;
-    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
-    opacity: 0;
-    transform: translateY(14px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    pointer-events: none;      /* панель не должна "перехватывать" мышь */
-}
-
-.car-info h3 {
-    font-size: 17px;
-    color: #1b1e23;
-    margin-bottom: 8px;
-}
-
-.car-specs li {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 0;
-    border-bottom: 1px solid #e3e0e0;
-    font-size: 14px;
-}
-
-.car-specs li:last-child {
-    border-bottom: none;
-}
-
-.car-specs span {
-    color: #777777;
-}
-
-.car-specs strong {
-    color: #1b1e23;
-}
-
-/* когда панель открыта (клавиатурой или тапом): машина бледнеет, панель всплывает */
-.car-card.is-open .car-photo,
-.car-card:focus-visible .car-photo {
-    opacity: 0.2;
-    transform: scale(0.92);
-}
-
-.car-card.is-open .car-info,
-.car-card:focus-visible .car-info {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* то же самое при наведении мыши.
-   (hover: hover) значит "устройство умеет наводить", на телефонах это не включается */
-@media (hover: hover) {
-    .car-card:hover .car-photo {
-        opacity: 0.2;
-        transform: scale(0.92);
-    }
-
-    .car-card:hover .car-info {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 /* ---------- всплывающее окно ---------- */
 
@@ -336,60 +420,69 @@
 
 /* ---------- АДАПТИВНОСТЬ ЭТОГО БЛОКА ---------- */
 
-/* планшет и уже: всё в одну колонку, "Другие авто" уезжает под чёрную кнопку */
+/* экран уже 900px (планшет, телефон): выноски уже не помещаются по краям машины.
+   Линии убираем, а три текста выстраиваются столбиком под машиной
+   и появляются один за другим */
 @media (max-width: 900px) {
-    .car-showcase-row {
-        grid-template-columns: 1fr;
-        justify-items: center;
-        gap: 20px;
-    }
-
-    .car-other-btn {
-        order: 2;               /* order меняет порядок: кнопка идёт после машины */
-        justify-self: center;
-    }
-}
-
-/* телефон: панель с данными не лежит поверх машины, а раскрывается под ней по тапу */
-@media (max-width: 600px) {
-    .car-showcase {
-        padding: 40px 15px;
+    .car-stage {
+        aspect-ratio: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
     }
 
     .car-card {
-        aspect-ratio: auto;
-    }
-
-    .car-photo {
-        height: auto;
-        aspect-ratio: 2 / 1;
-    }
-
-    .car-info {
         position: static;
-        max-height: 0;
-        overflow: hidden;
-        padding: 0 16px;
-        opacity: 0;
-        transform: none;
-        box-shadow: none;
-        transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+        width: 100%;
+        max-width: 500px;
+        aspect-ratio: 2 / 1;
+        height: auto;
     }
 
-    .car-card.is-open .car-info,
-    .car-card:focus-visible .car-info {
-        max-height: 320px;
-        padding: 16px;
-        margin-top: 10px;
-        opacity: 1;
+    .car-lines {
+        display: none;
     }
 
-    /* на телефоне машина при открытии панели остаётся яркой */
-    .car-card.is-open .car-photo,
-    .car-card:focus-visible .car-photo,
-    .car-card:hover .car-photo {
+    .car-callout {
+        position: static;
+        display: none;                 /* пока не нажали - не занимают места */
+        width: 100%;
+        max-width: 500px;
+        padding: 12px 16px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        text-align: left;
         opacity: 1;
         transform: none;
+        transition: none;
+    }
+
+    /* когда карточка "открыта", тексты по очереди выезжают (анимация callout-in) */
+    .car-card:is(.is-open, :focus-visible) ~ .car-callout {
+        display: flex;
+        animation: callout-in 0.45s ease both;
+        animation-delay: calc(var(--d) * 0.6);
+    }
+}
+
+@media (max-width: 900px) and (hover: hover) {
+    .car-card:hover ~ .car-callout {
+        display: flex;
+        animation: callout-in 0.45s ease both;
+        animation-delay: calc(var(--d) * 0.6);
+    }
+}
+
+@keyframes callout-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* телефон */
+@media (max-width: 600px) {
+    .car-showcase {
+        padding: 40px 15px;
     }
 
     .modal-box {
@@ -400,11 +493,14 @@
 /* если у человека в системе включено "уменьшить анимацию", отключаем движение */
 @media (prefers-reduced-motion: reduce) {
     .car-photo,
-    .car-info,
+    .car-callout,
+    .car-line path,
+    .car-line circle,
     .modal-overlay,
     .modal-box,
     .robot-tick {
-        transition: none;
+        transition: none !important;
+        animation: none !important;
     }
 
     .success-icon,

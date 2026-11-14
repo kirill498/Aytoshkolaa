@@ -4,14 +4,14 @@
 
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
-const db = require("./db");
+const db = require("./database/db.js");
 
 async function main() {
     const login = process.argv[2];
     const password = process.argv[3];
 
     if (!login || !password) {
-        console.log("Использование: node create-admin.js ЛОГИН ПАРОЛЬ");
+        console.log("Использование: node scripts/create-admin.js ЛОГИН ПАРОЛЬ");
         process.exit(1);
     }
     if (password.length < 8) {

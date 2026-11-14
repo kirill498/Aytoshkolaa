@@ -6,7 +6,7 @@ const express = require("express");
 const session = require("express-session");
 const bcrypt = require("bcryptjs");
 const path = require("path");
-const db = require("./db");
+const db = require("./database/db.js");
 
 const app = express();
 const PORT = 3000;
