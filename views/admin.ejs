@@ -1,0 +1,75 @@
+<%- include('partials/header') %>
+
+    <% if (!loggedIn) { %>
+
+    <!-- ФОРМА ВХОДА -->
+    <section class="form-block">
+        <form class="form-box" method="POST" action="/admin/login">
+            <h2>Вход для администратора</h2>
+
+            <div class="form-group">
+                <label for="adminLogin">Логин</label>
+                <input type="text" id="adminLogin" name="login" autocomplete="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="adminPassword">Пароль</label>
+                <input type="password" id="adminPassword" name="password" autocomplete="current-password" required>
+            </div>
+
+            <% if (error) { %>
+            <div class="form-error"><%= error %></div>
+            <% } %>
+
+            <button type="submit" class="btn">Войти</button>
+        </form>
+    </section>
+
+    <% } else { %>
+
+    <!-- ПАНЕЛЬ С ЗАЯВКАМИ -->
+    <section class="page-content">
+        <h1>Заявки на обучение</h1>
+
+        <% if (applications.length === 0) { %>
+        <p>Заявок пока нет</p>
+        <% } else { %>
+        <div style="overflow-x: auto;">
+            <table class="admin-table">
+                <tr>
+                    <th>№</th>
+                    <th>Имя</th>
+                    <th>Телефон</th>
+                    <th>Email</th>
+                    <th>Авто</th>
+                    <th>Дата</th>
+                    <th></th>
+                </tr>
+                <% applications.forEach(function (a, i) { %>
+                <tr>
+                    <td><%= i + 1 %></td>
+                    <td><%= a.name %></td>
+                    <td><%= a.phone %></td>
+                    <td><%= a.email || '—' %></td>
+                    <td><%= a.car || '—' %></td>
+                    <td><%= new Date(a.created_at).toLocaleString("ru-RU") %></td>
+                    <td>
+                        <form method="POST" action="/admin/applications/<%= a.id %>/delete"
+                              onsubmit="return confirm('Удалить эту заявку?')">
+                            <button type="submit" class="btn btn-dark">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+            </table>
+        </div>
+        <% } %>
+
+        <form method="POST" action="/admin/logout">
+            <button type="submit" class="btn btn-dark">Выйти</button>
+        </form>
+    </section>
+
+    <% } %>
+
+<%- include('partials/footer') %>

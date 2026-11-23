@@ -1,0 +1,204 @@
+<%- include('partials/header') %>
+    <!-- ГЛАВНЫЙ БЛОК -->
+    <section class="hero">
+        <h1>Учим водить машину без стресса</h1>
+        <p>
+            Автошкола АвтоСтарт помогает и новичкам, и тем, кто уже пробовал ездить.
+            Занятия по теории и практике, честная цена без доплат.
+        </p>
+        <a href="/registration" class="btn">Записаться на курс</a>
+
+        <div class="facts">
+            <div class="fact-item">
+                <span class="number">11 лет</span>
+                <span>работаем в городе</span>
+            </div>
+            <div class="fact-item">
+                <span class="number">96%</span>
+                <span>сдают экзамен с 1 раза</span>
+            </div>
+            <div class="fact-item">
+                <span class="number">14</span>
+                <span>учебных машин</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- БЛОК С АВТОМОБИЛЕМ -->
+    <section class="car-showcase">
+        <h2>Ваша учебная машина</h2>
+        <p class="car-showcase-sub">Наведите на автомобиль, чтобы узнать подробности</p>
+
+        <!-- "сцена": машина по центру, вокруг неё появляются выноски 1, 2, 3 -->
+        <div class="car-stage">
+
+            <!-- сама машина. Выноски ниже ищут её по классу car-card -->
+            <div class="car-card" id="carCard" tabindex="0">
+                <img class="car-photo" src="/png/skoda-rapid.png"
+                     alt="Шкода Рапид 2019, 1.6" width="500" height="250">
+            </div>
+
+            <!-- линии выносок. Рисуются поверх сцены, пока невидимы.
+                 Каждая линия начинается у машины (кружок) и идёт к тексту.
+                 Координаты в системе 1000 x 320 (машина занимает середину, x от 250 до 750) -->
+            <svg class="car-lines" viewBox="0 0 1000 320" aria-hidden="true">
+                <g class="car-line line-1">
+                    <path d="M 300 125 L 235 100 H 40" pathLength="1"/>
+                    <circle cx="300" cy="125" r="5"/>
+                </g>
+                <g class="car-line line-2">
+                    <path d="M 695 135 L 770 96 H 960" pathLength="1"/>
+                    <circle cx="695" cy="135" r="5"/>
+                </g>
+                <g class="car-line line-3">
+                    <path d="M 700 235 L 800 268 H 960" pathLength="1"/>
+                    <circle cx="700" cy="235" r="5"/>
+                </g>
+            </svg>
+
+            <!-- ТЕКСТЫ ВЫНОСОК. Цифры - ПРИМЕРЫ, подставьте реальные данные школы.
+                 label - маленькая подпись, value - крупный текст, sub - пояснение -->
+            <div class="car-callout callout-1">
+                <span class="callout-label">Характеристики</span>
+                <strong class="callout-value">1.6 л</strong>
+                <span class="callout-sub">лифтбек, механика</span>
+            </div>
+
+            <div class="car-callout callout-2">
+                <span class="callout-label">Сдали с 1 раза</span>
+                <strong class="callout-value">85%</strong>
+                <span class="callout-sub">учеников на этой машине</span>
+            </div>
+
+            <div class="car-callout callout-3">
+                <span class="callout-label">Срок обучения</span>
+                <strong class="callout-value">1 месяц</strong>
+                <span class="callout-sub">до экзамена в ГИБДД</span>
+            </div>
+        </div>
+
+        <!-- две кнопки под машиной -->
+        <div class="car-buttons">
+            <a href="/cars" class="btn btn-outline">Другие авто</a>
+            <button type="button" class="btn btn-dark" id="openCarModal"
+                    data-car="Шкода Рапид 2019, 1.6">Мне это подходит</button>
+        </div>
+    </section>
+
+    <!-- ВСПЛЫВАЮЩЕЕ ОКНО ЗАЯВКИ (скрыто, пока не нажали "Мне это подходит") -->
+    <div class="modal-overlay" id="carModal" aria-hidden="true">
+        <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <button type="button" class="modal-close" id="closeCarModal" aria-label="Закрыть">&times;</button>
+
+            <h2 id="modalTitle">Заявка на обучение</h2>
+            <p class="modal-car">Автомобиль: <strong id="modalCarName"></strong></p>
+
+            <form id="carForm" novalidate>
+                <div class="form-group">
+                    <label for="carName">Имя</label>
+                    <input type="text" id="carName" placeholder="Как вас зовут?" autocomplete="name">
+                    <div class="form-error" id="carNameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="carPhone">Телефон</label>
+                    <input type="tel" id="carPhone" placeholder="+7 900 000-00-00" autocomplete="tel">
+                    <div class="form-error" id="carPhoneError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="carEmail">Email</label>
+                    <input type="email" id="carEmail" placeholder="name@example.com" autocomplete="email">
+                    <div class="form-error" id="carEmailError"></div>
+                </div>
+
+                <!-- "Я не робот" -->
+                <div class="robot-check" id="robotCheck" role="checkbox" aria-checked="false" tabindex="0">
+                    <span class="robot-box">
+                        <span class="robot-spinner"></span>
+                        <span class="robot-tick">&#10003;</span>
+                    </span>
+                    <span class="robot-label">Я не робот</span>
+                </div>
+                <div class="form-error robot-error" id="robotError"></div>
+
+                <div class="form-error" id="carServerError"></div>
+
+                <button type="submit" class="btn" id="carSubmit">Отправить заявку</button>
+            </form>
+
+            <!-- что видит человек после успешной отправки -->
+            <div class="modal-success" id="carSuccess" style="display:none;">
+                <div class="success-icon">&#10003;</div>
+                <h3>Спасибо, <span id="successName"></span>!</h3>
+                <p>Мы получили вашу заявку и скоро свяжемся с вами.</p>
+                <button type="button" class="btn" id="successClose">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- КОРОТКО ПРО ШКОЛУ -->
+    <section class="cards">
+        <h2>Почему выбирают нас</h2>
+        <div class="card-list">
+            <div class="card">
+                <h3>Фиксированная цена</h3>
+                <p>Стоимость курса не меняется после того, как вы записались.</p>
+            </div>
+            <div class="card">
+                <h3>Удобное расписание</h3>
+                <p>Занятия подстраиваются под вашу учёбу или работу.</p>
+            </div>
+            <div class="card">
+                <h3>Опытные инструкторы</h3>
+                <p>Инструктора учат спокойно объяснять и не торопят учеников.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ТАРИФЫ -->
+    <section class="prices">
+        <h2>Тарифы</h2>
+
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="showTab('categoryB')">Категория B</button>
+            <button class="tab-btn" onclick="showTab('season')">Сезонные предложения</button>
+        </div>
+
+        <div id="categoryB" class="tab-content active">
+            <div class="card-list">
+                <div class="card">
+                    <h3>Механика</h3>
+                    <p>32 000 рублей</p>
+                    <p>56 часов теории + 56 часов практики</p>
+                </div>
+                <div class="card">
+                    <h3>Автомат</h3>
+                    <p>36 000 рублей</p>
+                    <p>Практика на машине с АКПП</p>
+                </div>
+                <div class="card">
+                    <h3>Ускоренный курс</h3>
+                    <p>41 000 рублей</p>
+                    <p>Занятия 3 раза в неделю</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="season" class="tab-content">
+            <div class="card-list">
+                <div class="card">
+                    <h3>Осенний старт</h3>
+                    <p>29 000 рублей</p>
+                    <p>Первое занятие бесплатно</p>
+                </div>
+                <div class="card">
+                    <h3>Уже пробовал водить</h3>
+                    <p>19 500 рублей</p>
+                    <p>Сокращённая программа практики</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<%- include('partials/footer') %>

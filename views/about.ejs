@@ -1,0 +1,117 @@
+<%- include('partials/header') %>
+
+    <section class="about-layout">
+
+        <!-- ЛЕВОЕ ФОТО: здание школы.
+             Пока файла нет, виден серый блок с подписью. Как только положите фото, оно закроет подпись -->
+        <figure class="about-photo about-photo-left">
+            <span class="photo-placeholder">Здесь будет фото<br>здания школы</span>
+            <img src="/png/school-building.jpg" alt="Здание автошколы АвтоСтарт"
+                 onerror="this.style.display='none'">
+        </figure>
+
+        <!-- ЦЕНТР: весь текст страницы -->
+        <div class="about-center">
+
+            <h1>О нашей автошколе</h1>
+
+            <p class="about-lead">
+                Автошкола АвтоСтарт работает с 2014 года. За это время мы выпустили больше
+                2000 учеников, многие из которых уже сами водят машину каждый день без проблем.
+            </p>
+            <p>
+                Мы учим не просто сдавать экзамен, а уверенно чувствовать себя на дороге.
+                Инструкторы объясняют спокойно и без криков, даже если ученик боится руля.
+            </p>
+
+            <!-- цифры о школе -->
+            <div class="about-stats">
+                <div class="stat"><strong>2014</strong><span>год основания</span></div>
+                <div class="stat"><strong>2000+</strong><span>выпускников</span></div>
+                <div class="stat"><strong>14</strong><span>учебных машин</span></div>
+                <div class="stat"><strong>96%</strong><span>сдают с 1 раза</span></div>
+            </div>
+
+            <!-- РЕЖИМ РАБОТЫ. Строки ниже (кроме общего режима 9:00-20:00) - примеры, замените на свои -->
+            <div class="about-card">
+                <div class="card-head">
+                    <h2>Режим работы</h2>
+                    <!-- сюда about.js пишет "Сейчас открыто" или "Сейчас закрыто" -->
+                    <span class="open-status" id="openStatus"></span>
+                </div>
+                <ul class="hours-list">
+                    <li><span>Офис и запись на курсы</span><strong>ежедневно, 9:00 &ndash; 20:00</strong></li>
+                    <li><span>Практическое вождение</span><strong>ежедневно, 9:00 &ndash; 20:00 (по записи)</strong></li>
+                    <li><span>Теоретические занятия</span><strong>пн, ср, пт, 18:30 &ndash; 20:00</strong></li>
+                    <li><span>Выходные и праздники</span><strong>работаем без выходных</strong></li>
+                </ul>
+            </div>
+
+            <!-- КАК НАС НАЙТИ. Адрес и телефоны подставьте свои -->
+            <div class="about-card">
+                <h2>Как нас найти</h2>
+                <ul class="contact-list">
+                    <li>
+                        <span class="c-label">Адрес</span>
+                        <span>г. Москва, ул. Примерная, дом 12</span>
+                    </li>
+                    <li>
+                        <span class="c-label">Телефоны</span>
+                        <span>
+                            <a href="tel:+74957000000">+7 (495) 700-00-00</a><br>
+                            <a href="tel:+79000000000">+7 (900) 000-00-00</a>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="c-label">Почта</span>
+                        <span><a href="mailto:info@autostart.example">info@autostart.example</a></span>
+                    </li>
+                </ul>
+                <a class="btn btn-dark" target="_blank" rel="noopener"
+                   href="https://yandex.ru/maps/?text=Москва,+ул.+Примерная,+дом+12">Построить маршрут</a>
+            </div>
+
+            <!-- ПОЧЕМУ НАС ВЫБИРАЮТ (тексты примерные, поправьте под школу) -->
+            <div class="about-features">
+                <h2>Почему выбирают нас</h2>
+                <div class="feature-list">
+                    <div class="feature">
+                        <div class="feature-icon">&#10003;</div>
+                        <h3>Спокойные инструкторы</h3>
+                        <p>Объясняем без крика и подстраиваемся под темп ученика.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">&#10003;</div>
+                        <h3>Честная цена</h3>
+                        <p>Стоимость фиксируется в договоре, никаких доплат в процессе.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">&#10003;</div>
+                        <h3>Удобное время</h3>
+                        <p>Занятия утром, вечером и в выходные, подберём график под вас.</p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="about-license">Лицензия № Л035-01111-77</p>
+
+            <!-- призыв записаться -->
+            <div class="about-cta">
+                <h2>Готовы начать?</h2>
+                <p>Оставьте заявку, и мы перезвоним в течение дня.</p>
+                <a href="/registration" class="btn">Записаться на курс</a>
+            </div>
+
+        </div>
+
+        <!-- ПРАВОЕ ФОТО: парковка -->
+        <figure class="about-photo about-photo-right">
+            
+            <img src="/png/parkin.png" alt="Парковка автошколы АвтоСтарт"
+                 onerror="this.style.display='none'">
+            
+        </figure>
+
+    </section>
+
+<%- include('partials/footer') %>
